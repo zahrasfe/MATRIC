@@ -1,0 +1,174 @@
+#include <stdio.h>
+
+// تابعی برای دریافت ابعاد و ماتریس از کاربر
+void inputMatrix(int rows, int cols, int matrix[rows][cols]) {
+    printf("Enter the elements of the matrix (%dx%d):\n", rows, cols);
+    for (int i = 0; i < rows; i++) {
+        for (int j = 0; j < cols; j++) {
+            printf("Element [%d][%d]: ", i + 1, j + 1);
+            scanf("%d", &matrix[i][j]);
+        }
+    }
+}
+
+// تابعی برای چاپ ماتریس
+void printMatrix(int rows, int cols, int matrix[rows][cols]) {
+    printf("Matrix (%dx%d):\n", rows, cols);
+    for (int i = 0; i < rows; i++) {
+        for (int j = 0; j < cols; j++) {
+            printf("%d ", matrix[i][j]);
+        }
+        printf("\n");
+    }
+}
+
+// تابعی برای ضرب دو ماتریس
+void multiplyMatrix(int rowsA, int colsA, int matrixA[rowsA][colsA], 
+                   int rowsB, int colsB, int matrixB[rowsB][colsB], 
+                   int result[rowsA][colsB]) {
+    for (int i = 0; i < rowsA; i++) {
+        for (int j = 0; j < colsB; j++) {
+            result[i][j] = 0;
+            for (int k = 0; k < colsA; k++) {
+                result[i][j] += matrixA[i][k] * matrixB[k][j];
+            }
+        }
+    }
+}
+
+// تابعی برای جمع دو ماتریس
+void addMatrix(int rows, int cols, int matrixA[rows][cols], 
+               int matrixB[rows][cols], int result[rows][cols]) {
+    for (int i = 0; i < rows; i++) {
+        for (int j = 0; j < cols; j++) {
+            result[i][j] = matrixA[i][j] + matrixB[i][j];
+        }
+    }
+}
+
+// تابعی برای تفریق دو ماتریس
+void subtractMatrix(int rows, int cols, int matrixA[rows][cols], 
+                    int matrixB[rows][cols], int result[rows][cols]) {
+    for (int i = 0; i < rows; i++) {
+        for (int j = 0; j < cols; j++) {
+            result[i][j] = matrixA[i][j] - matrixB[i][j];
+        }
+    }
+}
+
+// تابعی برای ضرب یک عدد در ماتریس
+void scalarMultiply(int rows, int cols, int matrix[rows][cols], int scalar, int result[rows][cols]) {
+    for (int i = 0; i < rows; i++) {
+        for (int j = 0; j < cols; j++) {
+            result[i][j] = matrix[i][j] * scalar;
+        }
+    }
+}
+
+// تابعی برای جستجوی یک درایه در ماتریس
+int searchElement(int rows, int cols, int matrix[rows][cols], int value) {
+    for (int i = 0; i < rows; i++) {
+        for (int j = 0; j < cols; j++) {
+            if (matrix[i][j] == value) {
+                printf("Element found at position [%d][%d]\n", i + 1, j + 1);
+                return 1; // درایه پیدا شد
+            }
+        }
+    }
+    printf("Element not found.\n");
+    return 0; // درایه پیدا نشد
+}
+
+// تابعی برای ویرایش یک درایه مشخص
+void editElement(int rows, int cols, int matrix[rows][cols], int i, int j, int newValue) {
+    if (i >= 0 && i < rows && j >= 0 && j < cols) {
+        matrix[i][j] = newValue;
+    } else {
+        printf("Invalid position.\n");
+    }
+}
+
+// تابعی واسه جمع عناصر سطرها
+void sumRows(int rows, int cols, int matrix[rows][cols]) {
+    for (int i = 0; i < rows; i++) {
+        int sum = 0;
+        for (int j = 0; j < cols; j++) {
+            sum += matrix[i][j];
+        }
+        printf("Sum of row %d: %d\n", i + 1, sum);
+    }
+}
+
+// تابعی واسه جمع عناصر ستون‌ها
+void sumColumns(int rows, int cols, int matrix[rows][cols]) {
+    for (int j = 0; j < cols; j++) {
+        int sum = 0;
+        for (int i = 0; i < rows; i++) {
+            sum += matrix[i][j];
+        }
+        printf("Sum of column %d: %d\n", j + 1, sum);
+    }
+}
+
+int main() {
+    int rows, cols;
+
+    // دریافت ابعاد ماتریس
+    printf("Enter the number of rows and columns for the matrix (rows cols): ");
+    scanf("%d %d", &rows, &cols);
+    
+    int matrix[rows][cols];
+    inputMatrix(rows, cols, matrix);
+    printMatrix(rows, cols, matrix);
+
+    // مثال‌هایی از توابع مختلف
+    int matrix2[rows][cols];
+    inputMatrix(rows, cols, matrix2);
+
+    int result[rows][cols];
+
+    // جمع ماتریس‌ها
+    addMatrix(rows, cols, matrix, matrix2, result);
+    printMatrix(rows, cols, result);
+
+    // تفریق ماتریس‌ها
+    subtractMatrix(rows, cols, matrix, matrix2, result);
+    printMatrix(rows, cols, result);
+
+    // ضرب ماتریس‌ها (فقط واسه ی ماتریس‌های قابل ضرب)
+    if (cols == rows) {
+        int matrix3[rows][cols];
+        inputMatrix(rows, cols, matrix3);
+        int multiplyResult[rows][cols];
+        multiplyMatrix(rows, cols, matrix, rows, cols, matrix3, multiplyResult);
+        printMatrix(rows, cols, multiplyResult);
+    }
+
+    // ضرب یک عدد در ماتریس
+    int scalar;
+    printf("Enter a scalar to multiply with the matrix: ");
+    scanf("%d", &scalar);
+    scalarMultiply(rows, cols, matrix, scalar, result);
+    printMatrix(rows, cols, result);
+
+    // جستجوی یک درایه
+    int value;
+    printf("Enter an element to search: ");
+    scanf("%d", &value);
+    searchElement(rows, cols, matrix, value);
+
+    // ویرایش یک درایه مشخص
+    int i, j, newValue;
+    printf("Enter row and column to edit (i j newValue): ");
+    scanf("%d %d %d", &i, &j, &newValue);
+    editElement(rows, cols, matrix, i - 1, j - 1, newValue); // با فرض اینکه ورودی 1-indexed است
+    printMatrix(rows, cols, matrix);
+
+    // جمع عناصر سطرها
+    sumRows(rows, cols, matrix);
+    
+    // جمع عناصر ستون‌ها
+    sumColumns(rows, cols, matrix);
+
+    return 0;
+}
